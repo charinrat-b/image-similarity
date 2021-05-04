@@ -26,6 +26,10 @@ def create_model():
     model.add(Dense(20,activation='softmax'))
     return model
 
+opt = SGD(lr=1e-4, momentum=0.9)
+model.compile(loss="categorical_crossentropy", optimizer=opt,metrics=["accuracy"])
+history = model.fit(train_x,train_y, epochs=50, batch_size=25, validation_split=0.2, callbacks=[callback,checkpoint])
+
 def load_model_from_path(filepath):
     model = load_model(filepath)
     return model
