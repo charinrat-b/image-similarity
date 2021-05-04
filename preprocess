@@ -1,0 +1,86 @@
+from keras.preprocessing.image import load_img
+from keras.preprocessing.image import img_to_array
+import matplotlib.pyplot as plt
+import numpy as  np
+from keras.applications.vgg16 import VGG16
+from keras.applications import vgg16
+from keras import models, Model
+from annoy import AnnoyIndex
+import pandas as pd
+from scipy import spatial
+
+def load_images_from_folder(folder):
+    images = []
+    for filename in os.listdir(folder):
+        img = cv2.imread(os.path.join(folder,filename))
+        img = load_img(os.path.join(folder,filename),  target_size=(224, 224))
+        img = img_to_array(img)
+        img = img.reshape((1,) + img.shape)
+        if img is not None:
+            images.append(img)
+    return images
+
+def read_data(main_dir):
+    folder_name = os.listdir(main_dir)
+    persons =[]
+    for person_name in (folder_name):
+        folder_path = os.listdir(main_dir + '/' + person_name)
+        count = 0
+        for filename in folder_path:
+            count += 1
+            persons.append(((person_name, str(main_dir + '/' + person_name) + '/' + filename, person_name + '_' + str(count))))
+            person_df = pd.DataFrame(data=persons, columns=['name',main_dir,'id_index'])
+
+
+
+for i in os.listdir(path):
+    if i != '.DS_Store':
+        data_path = path + str(i)
+        for filenames in os.listdir(data_path):
+            fuu = data_path + '/' + filenames
+            df = pd.read_csv(fuu,sep=';')
+            
+
+def map(row):
+   if pd.notnull(row.Down):
+      return 0
+   else:
+      return 1
+
+            
+x = list(data['x'])
+y = list(data['y'])
+plt.ylim(-0.1, 1.5)
+plt.xlim(0.9, 2)
+plt.show()
+
+
+def create_model():
+
+    model=Sequential()
+    model.add(Conv2D(200,(3,3),input_shape=data.shape[1:]))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Conv2D(100,(3,3)))
+    model.add(Activation('relu'))
+    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(Flatten())
+    model.add(Dropout(0.5))
+    model.add(Dense(20,activation='softmax'))
+    return model2
+
+def get_preds(all_imgs_arr):
+    preds_all = np.zeros((len(all_imgs_arr),4096))
+    for j in range(all_imgs_arr.shape[0]):
+        preds_all[j] = model.predict(all_imgs_arr[j])
+        
+    return preds_all
+
+
+if __name__ == '__main__':
+    all_imgs_arr = get_all_images()
+    all_imgs_arr = all_imgs_arr.reshape(all_imgs_arr.shape[1], 1, 224, 224, 3)
+    np.save('all_images', all_imgs_arr)
+    model = create_model()
+    preds_all = get_preds(all_imgs_arr)
+    np.savez('images_preds', images=all_imgs_arr, preds=preds_all)
